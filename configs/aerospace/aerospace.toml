@@ -1,0 +1,227 @@
+# =============================================================================
+# AeroSpace Tiling Window Manager Configuration
+# =============================================================================
+# An opinionated, Hyprland/i3-inspired tiling setup for macOS.
+# Modifier: alt (option key)
+# Navigation: vim-style h/j/k/l
+# =============================================================================
+
+# Launch AeroSpace at login and start with the workspace the cursor is on.
+start-at-login = true
+after-login-command = []
+after-startup-command = []
+
+# Normalizations: rewrite window roles so AeroSpace can tile them properly.
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+# =============================================================================
+# Layout
+# =============================================================================
+
+# Accordion (stacking) is the default — windows fan out like cards, showing
+# a sliver of each inactive window. Switch to 'tiles' if you prefer strict
+# BSP-style splits.
+default-root-container-layout = 'accordion'
+
+# When a new window opens, place it after the focused window.
+default-root-container-orientation = 'auto'
+
+# Focus follows the mouse when it enters a different window. Disabled by
+# default on macOS because of how Spaces interact, but it feels natural
+# for a tiling setup.
+on-focus-changed = ['move-mouse window-lazy-center']
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
+# Automatically bring the mouse to the center of a newly focused window.
+# Combined with on-focus-changed this gives near-seamless focus tracking.
+
+# =============================================================================
+# Gaps
+# =============================================================================
+
+[gaps]
+inner.horizontal = 8
+inner.vertical   = 8
+outer.left       = 8
+outer.bottom     = 8
+outer.top        = 8
+outer.right      = 8
+
+# =============================================================================
+# Main Mode Bindings
+# =============================================================================
+
+[mode.main.binding]
+
+# ---------------------------------------------------------------------------
+# Focus — alt + h/j/k/l (vim directions)
+# ---------------------------------------------------------------------------
+alt-h = 'focus left'
+alt-j = 'focus down'
+alt-k = 'focus up'
+alt-l = 'focus right'
+
+# ---------------------------------------------------------------------------
+# Move window — alt + shift + h/j/k/l
+# ---------------------------------------------------------------------------
+alt-shift-h = 'move left'
+alt-shift-j = 'move down'
+alt-shift-k = 'move up'
+alt-shift-l = 'move right'
+
+# ---------------------------------------------------------------------------
+# Resize — alt + shift + minus / equal
+# ---------------------------------------------------------------------------
+alt-shift-minus = 'resize smart -50'
+alt-shift-equal = 'resize smart +50'
+
+# ---------------------------------------------------------------------------
+# Layout toggles
+# ---------------------------------------------------------------------------
+alt-f = 'fullscreen'
+alt-s = 'layout floating tiling'        # toggle floating/tiling
+alt-t = 'layout tiles accordion'        # cycle tiled layouts
+
+# ---------------------------------------------------------------------------
+# Split direction (applies to the *next* window that opens)
+# ---------------------------------------------------------------------------
+alt-v = 'split vertical'
+alt-b = 'split horizontal'
+
+# ---------------------------------------------------------------------------
+# Launch terminal — alt + enter → Ghostty
+# ---------------------------------------------------------------------------
+alt-enter = 'exec-and-forget open -na Ghostty'
+
+# ---------------------------------------------------------------------------
+# Close focused window
+# ---------------------------------------------------------------------------
+alt-shift-q = 'close'
+
+# ---------------------------------------------------------------------------
+# Reload config
+# ---------------------------------------------------------------------------
+alt-shift-r = 'reload-config'
+
+# ---------------------------------------------------------------------------
+# Workspaces — alt + 1‒9 to focus
+# ---------------------------------------------------------------------------
+alt-1 = 'workspace 1'
+alt-2 = 'workspace 2'
+alt-3 = 'workspace 3'
+alt-4 = 'workspace 4'
+alt-5 = 'workspace 5'
+alt-6 = 'workspace 6'
+alt-7 = 'workspace 7'
+alt-8 = 'workspace 8'
+alt-9 = 'workspace 9'
+
+# ---------------------------------------------------------------------------
+# Move window to workspace — alt + shift + 1‒9
+# ---------------------------------------------------------------------------
+alt-shift-1 = 'move-node-to-workspace 1'
+alt-shift-2 = 'move-node-to-workspace 2'
+alt-shift-3 = 'move-node-to-workspace 3'
+alt-shift-4 = 'move-node-to-workspace 4'
+alt-shift-5 = 'move-node-to-workspace 5'
+alt-shift-6 = 'move-node-to-workspace 6'
+alt-shift-7 = 'move-node-to-workspace 7'
+alt-shift-8 = 'move-node-to-workspace 8'
+alt-shift-9 = 'move-node-to-workspace 9'
+
+# ---------------------------------------------------------------------------
+# Resize mode — alt + r enters resize mode for fine-grained adjustment
+# ---------------------------------------------------------------------------
+alt-r = 'mode resize'
+
+# =============================================================================
+# Resize Mode
+# =============================================================================
+# Enter with alt+r, use h/j/k/l to resize, escape or enter to return.
+
+[mode.resize.binding]
+h = 'resize width -50'
+j = 'resize height +50'
+k = 'resize height -50'
+l = 'resize width +50'
+minus = 'resize smart -50'
+equal = 'resize smart +50'
+enter = 'mode main'
+esc   = 'mode main'
+
+# =============================================================================
+# Auto-Float Rules
+# =============================================================================
+# Dialogs, preferences, small utility windows, and apps that don't tile well.
+
+[[on-window-detected]]
+if.app-id = 'com.apple.systempreferences'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.finder'
+if.window-title-regex-substring = '(Copy|Move|Delete|Connecting|Info|Preferences)'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.ActivityMonitor'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.calculator'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.ScreenSharing'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Stickies'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Preview'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.archiveutility'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.ColorSyncUtility'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.DigitalColorMeter'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.1password.1password'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.raycast.macos'
+run = 'layout floating'
+
+# Float any window with "dialog" or "preferences" in the title.
+[[on-window-detected]]
+if.window-title-regex-substring = '(?i)(dialog|preference|settings|about|update|welcome)'
+run = 'layout floating'
+
+# =============================================================================
+# Workspace Assignments (optional — uncomment and customise)
+# =============================================================================
+# Assign specific apps to specific workspaces on launch.
+
+# [[on-window-detected]]
+# if.app-id = 'com.mitchellh.ghostty'
+# run = ['move-node-to-workspace 1']
+
+# [[on-window-detected]]
+# if.app-id = 'com.google.Chrome'
+# run = ['move-node-to-workspace 2']
+
+# [[on-window-detected]]
+# if.app-id = 'com.tinyspeck.slackmacgap'
+# run = ['move-node-to-workspace 3']

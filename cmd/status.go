@@ -1,0 +1,97 @@
+package cmd
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/charmbracelet/lipgloss"
+	"github.com/dough654/Omachy/internal/brew"
+	"github.com/dough654/Omachy/internal/checksum"
+	"github.com/dough654/Omachy/internal/installer"
+	"github.com/dough654/Omachy/internal/manifest"
+	"github.com/spf13/cobra"
+)
+
+var (
+	statusTitle = lipgloss.NewStyle().
+			Bold(true).
+			Foreground(lipgloss.Color("#7C3AED")).
+			MarginBottom(1)
+
+	statusName = lipgloss.NewStyle().Width(24)
+
+	statusDetail = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#9CA3AF"))
+
+	sectionStyle = lipgloss.NewStyle().
+			Bold(true).
+			Foreground(lipgloss.Color("#A78BFA"))
+)
+
+func init() {
+	rootCmd.AddCommand(statusCmd)
+}
+
+var statusCmd = &cobra.Command{
+	Use:   "status",
+	Short: "Show installation status and detect config drift",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println(statusTitle.Render("Omachy Status"))
+		fmt.Println()
+
+		state, err := installer.LoadState()
+		if err != nil {
+			fmt.Printf("  %s Could not load state: %v\n", iconFail, err)
+			return
+		}
+
+		// Check packages
+		fmt.Println(sectionStyle.Render("  Packages"))
+		for _, pkg := range manifest.Packages() {
+			installed := brew.IsInstalled(pkg.Name, pkg.Cask)
+			if installed {
+				fmt.Printf("    %s %s %s\n", iconPass, statusName.Render(pkg.Name), statusDetail.Render("installed"))
+			} else {
+				fmt.Printf("    %s %s %s\n", iconFail, statusName.Render(pkg.Name), statusDetail.Render("not installed"))
+			}
+		}
+		fmt.Println()
+
+		// Check configs
+		fmt.Println(sectionStyle.Render("  Configs"))
+		if len(state.DeployedConfigs) == 0 {
+			fmt.Printf("    %s\n", statusDetail.Render("No configs deployed yet"))
+		} else {
+			for dest, expectedHash := range state.DeployedConfigs {
+				_, err := os.Stat(dest)
+				if err != nil {
+					fmt.Printf("    %s %s %s\n", iconFail, statusName.Render(shortPath(dest)), statusDetail.Render("missing"))
+					continue
+				}
+
+				currentHash, _ := checksum.Path(dest)
+				if currentHash == expectedHash {
+					fmt.Printf("    %s %s %s\n", iconPass, statusName.Render(shortPath(dest)), statusDetail.Render("unchanged"))
+				} else {
+					fmt.Printf("    %s %s %s\n", iconWarn, statusName.Render(shortPath(dest)), statusDetail.Render("modified (drift detected)"))
+				}
+			}
+		}
+		fmt.Println()
+
+		// Backup info
+		if state.BackupPath != "" {
+			fmt.Println(sectionStyle.Render("  Backup"))
+			fmt.Printf("    %s %s\n", iconPass, statusDetail.Render(state.BackupPath))
+			fmt.Println()
+		}
+	},
+}
+
+func shortPath(path string) string {
+	home, _ := os.UserHomeDir()
+	if len(path) > len(home) && path[:len(home)] == home {
+		return "~" + path[len(home):]
+	}
+	return path
+}

@@ -1,0 +1,92 @@
+#!/bin/bash
+
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+
+# --- Catppuccin Mocha Palette ---
+BAR_COLOR=0xff1e1e2e
+ITEM_BG=0xff313244
+ACCENT=0xff89b4fa
+TEXT=0xffcdd6f4
+SUBTEXT=0xffa6adc8
+GREEN=0xffa6e3a1
+YELLOW=0xfff9e2af
+RED=0xfff38ba8
+
+# --- Bar Properties ---
+sketchybar --bar \
+  height=32 \
+  position=top \
+  color=$BAR_COLOR \
+  border_width=0 \
+  shadow=off \
+  sticky=on \
+  padding_left=8 \
+  padding_right=8 \
+  topmost=window
+
+# --- Default Item Properties ---
+sketchybar --default \
+  icon.font="Hack Nerd Font:Bold:14.0" \
+  icon.color=$TEXT \
+  icon.padding_left=6 \
+  icon.padding_right=4 \
+  label.font="SF Pro:Semibold:13.0" \
+  label.color=$TEXT \
+  label.padding_left=4 \
+  label.padding_right=6 \
+  background.color=$ITEM_BG \
+  background.corner_radius=6 \
+  background.height=24 \
+  background.padding_left=4 \
+  background.padding_right=4
+
+# --- Spaces / Workspaces (left) ---
+for sid in $(seq 1 9); do
+  sketchybar --add space space.$sid left \
+    --set space.$sid \
+      associated_space=$sid \
+      icon=$sid \
+      icon.font="Hack Nerd Font:Bold:13.0" \
+      icon.color=$SUBTEXT \
+      icon.highlight_color=$ACCENT \
+      icon.padding_left=8 \
+      icon.padding_right=8 \
+      label.drawing=off \
+      background.drawing=off \
+      script="$PLUGIN_DIR/space.sh" \
+    --subscribe space.$sid space_change
+done
+
+# --- Front App (left) ---
+sketchybar --add item front_app left \
+  --set front_app \
+    icon.font="sketchybar-app-font:Regular:14.0" \
+    icon.color=$ACCENT \
+    label.color=$TEXT \
+    label.font="SF Pro:Semibold:13.0" \
+    background.drawing=on \
+    script="$PLUGIN_DIR/front_app.sh" \
+  --subscribe front_app front_app_switched
+
+# --- Clock (right) ---
+sketchybar --add item clock right \
+  --set clock \
+    icon=󰥔 \
+    icon.color=$ACCENT \
+    label.color=$TEXT \
+    background.drawing=on \
+    update_freq=30 \
+    script="$PLUGIN_DIR/clock.sh"
+
+# --- Battery (right) ---
+sketchybar --add item battery right \
+  --set battery \
+    icon.color=$GREEN \
+    label.color=$TEXT \
+    background.drawing=on \
+    update_freq=120 \
+    script="$PLUGIN_DIR/battery.sh" \
+  --subscribe battery system_woke power_source_change
+
+# --- Force initial update ---
+sketchybar --update

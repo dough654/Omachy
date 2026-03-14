@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:omarchy.org)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:learn.omacom.io)",
+      "Bash(go get:*)",
+      "Bash(go build:*)",
+      "Bash(chmod:*)"
+    ]
+  }
+}

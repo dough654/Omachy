@@ -1,0 +1,4 @@
+omachy
+*.exe
+dist/
+.DS_Store
