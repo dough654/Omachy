@@ -106,7 +106,7 @@ func checkXcodeCLI() Check {
 			Detail: "Not installed. Run: xcode-select --install",
 		}
 	}
-	return Check{Name: "Xcode CLI tools", Passed: true, Detail: strings.TrimSpace(string(output))}
+	return Check{Name: "Xcode CLI tools", Passed: true, Detail: strings.TrimSpace(string(output)) + " (ensure up to date via Software Update)"}
 }
 
 func checkSeparateSpaces() Check {

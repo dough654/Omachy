@@ -33,6 +33,7 @@ var macOSDefaults = []macOSDefault{
 	{"NSGlobalDomain", "KeyRepeat", "-int", "2", "Fast key repeat rate"},
 	{"NSGlobalDomain", "InitialKeyRepeat", "-int", "15", "Short key repeat delay"},
 	{"-g", "ApplePressAndHoldEnabled", "-bool", "false", "Disable press-and-hold for key repeat"},
+	{"NSGlobalDomain", "_HIHideMenuBar", "-bool", "true", "Auto-hide menu bar"},
 }
 
 func runSystem(p *tea.Program, opts Options) error {
