@@ -1,8 +1,8 @@
 # Omachy
 
-An open-source macOS tiling window manager installer. Omachy automates setting up an opinionated, keyboard-driven desktop experience on macOS — installing and configuring a tiling WM, custom menu bar, terminal emulator, editor, and system defaults in one shot.
+**Omarchy for the rest of us.**
 
-Inspired by [Omarchy](https://omakub.org/).
+Omachy brings the [Omarchy](https://omakub.org/) experience to macOS — a tiling WM, custom menu bar, terminal emulator, editor, and sane system defaults, all configured in one shot. For people who'd rather be on Linux but their employer had other plans.
 
 ## What Gets Installed
 
@@ -57,16 +57,15 @@ Inspired by [Omarchy](https://omakub.org/).
 ## Installation
 
 ```bash
-# Build
+brew tap dough654/omachy
+brew install omachy
+omachy install
+```
+
+### Building from source
+
+```bash
 go build -o omachy .
-
-# Check system readiness
-./omachy doctor
-
-# Dry run (no changes made)
-./omachy install --dry-run
-
-# Full install
 ./omachy install
 ```
 
