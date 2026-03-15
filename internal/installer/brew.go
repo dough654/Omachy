@@ -51,12 +51,17 @@ func runPackages(p *tea.Program, opts Options) error {
 				Name: pkg.Name,
 				Cask: pkg.Cask,
 			})
+			// Save state after each install so interrupted installs don't orphan packages
+			if err := SaveState(state); err != nil {
+				return fmt.Errorf("save state: %w", err)
+			}
 		}
 
 		pct := 40 + ((i+1)*20)/len(pkgs) // packages phase covers 40-60%
 		p.Send(tui.ProgressUpdate{Percent: pct})
 	}
 
+	// Final save to capture taps
 	if !opts.DryRun {
 		if err := SaveState(state); err != nil {
 			return fmt.Errorf("save state: %w", err)

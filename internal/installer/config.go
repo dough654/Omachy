@@ -103,8 +103,9 @@ func runConfigs(p *tea.Program, opts Options) error {
 		dest := expandHome(cfg.Dest, home)
 
 		// Skip configs marked NeverOverwrite if destination already exists
+		// Use Lstat to detect symlinks (even broken ones) as "exists"
 		if cfg.NeverOverwrite && !opts.Force {
-			if _, err := os.Stat(dest); err == nil {
+			if _, err := os.Lstat(dest); err == nil {
 				log(fmt.Sprintf("==> Skipping %s (existing config found, use --force to overwrite)", cfg.Dest))
 				pct := 60 + ((i+1)*20)/len(configs)
 				p.Send(tui.ProgressUpdate{Percent: pct})
@@ -258,18 +259,31 @@ func updateZshrcBlock(path string, log func(string)) error {
 
 	log("==> Updating ~/.zshrc with shell integrations")
 
-	// Remove existing managed block if present
+	// Remove existing managed block if present (only if both markers exist)
 	cleaned := removeManagedBlock(existing)
 
+	// Check for orphaned markers — if only one marker exists, don't add a new block
+	// to avoid duplicates. Warn the user instead.
+	if strings.Contains(cleaned, zshrcMarkerStart) || strings.Contains(cleaned, zshrcMarkerEnd) {
+		log("    Warning: found orphaned Omachy markers in .zshrc — please fix manually")
+		return nil
+	}
+
 	// Build new managed block
-	block := "\n" + zshrcMarkerStart + "\n"
+	block := zshrcMarkerStart + "\n"
 	for _, line := range lines {
 		block += line + "\n"
 	}
 	block += zshrcMarkerEnd + "\n"
 
-	// Append to file
-	newContent := strings.TrimRight(cleaned, "\n") + "\n" + block
+	// Append to file, ensuring exactly one blank line separator
+	base := strings.TrimRight(cleaned, "\n")
+	var newContent string
+	if base == "" {
+		newContent = block
+	} else {
+		newContent = base + "\n\n" + block
+	}
 
 	return os.WriteFile(path, []byte(newContent), 0644)
 }
@@ -280,10 +294,8 @@ func removeManagedBlock(content string) string {
 	if startIdx == -1 || endIdx == -1 || endIdx < startIdx {
 		return content
 	}
-	// Remove from the newline before the start marker to the end of the end marker line
 	before := content[:startIdx]
 	after := content[endIdx+len(zshrcMarkerEnd):]
-	// Trim trailing newline from the end marker
 	if len(after) > 0 && after[0] == '\n' {
 		after = after[1:]
 	}

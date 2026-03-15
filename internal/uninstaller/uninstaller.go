@@ -117,10 +117,15 @@ func removeConfigs(p *tea.Program, opts Options) error {
 
 	// Restore from backup if available
 	if state.BackupPath != "" {
-		log(fmt.Sprintf("==> Restoring backup from %s", state.BackupPath))
-		if !opts.DryRun {
-			if err := restoreBackup(state.BackupPath, log); err != nil {
-				log(fmt.Sprintf("    Warning: backup restore failed: %v", err))
+		if _, err := os.Stat(state.BackupPath); os.IsNotExist(err) {
+			log(fmt.Sprintf("==> Backup directory missing: %s", state.BackupPath))
+			log("    Original configs cannot be restored (backup was deleted)")
+		} else {
+			log(fmt.Sprintf("==> Restoring backup from %s", state.BackupPath))
+			if !opts.DryRun {
+				if err := restoreBackup(state.BackupPath, log); err != nil {
+					log(fmt.Sprintf("    Warning: backup restore failed: %v", err))
+				}
 			}
 		}
 	}

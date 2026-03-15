@@ -52,7 +52,11 @@ func LoadState() (*State, error) {
 
 	var s State
 	if err := json.Unmarshal(data, &s); err != nil {
-		return nil, err
+		// Corrupted state file — treat as empty rather than failing
+		return &State{
+			DeployedConfigs:  make(map[string]string),
+			OriginalDefaults: make(map[string]string),
+		}, nil
 	}
 	if s.DeployedConfigs == nil {
 		s.DeployedConfigs = make(map[string]string)
@@ -63,10 +67,11 @@ func LoadState() (*State, error) {
 	return &s, nil
 }
 
-// SaveState writes the state file.
+// SaveState writes the state file atomically (write to temp, then rename).
 func SaveState(s *State) error {
 	path := statePath()
-	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
+	dir := filepath.Dir(path)
+	if err := os.MkdirAll(dir, 0755); err != nil {
 		return err
 	}
 
@@ -75,5 +80,22 @@ func SaveState(s *State) error {
 		return err
 	}
 
-	return os.WriteFile(path, data, 0644)
+	// Write to temp file then rename for atomic update
+	tmp, err := os.CreateTemp(dir, "state-*.json")
+	if err != nil {
+		return err
+	}
+	tmpPath := tmp.Name()
+
+	if _, err := tmp.Write(data); err != nil {
+		tmp.Close()
+		os.Remove(tmpPath)
+		return err
+	}
+	if err := tmp.Close(); err != nil {
+		os.Remove(tmpPath)
+		return err
+	}
+
+	return os.Rename(tmpPath, path)
 }
