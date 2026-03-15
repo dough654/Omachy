@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Omachy — Tiling Window Manager Setup for macOS</title>
+  <style>
+    :root {
+      --primary: #7C3AED;
+      --secondary: #A78BFA;
+      --bg: #1E1E2E;
+      --bg-surface: #262637;
+      --text: #CDD6F4;
+      --muted: #6C7086;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a { color: var(--secondary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 6rem 0 4rem;
+    }
+
+    .hero pre {
+      color: var(--primary);
+      font-size: 0.7rem;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+      display: inline-block;
+      text-align: left;
+    }
+
+    .hero h1 {
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--secondary);
+      margin-bottom: 2rem;
+    }
+
+    .install-cmd {
+      background: var(--bg-surface);
+      border: 1px solid var(--primary);
+      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      display: inline-block;
+      font-size: 0.85rem;
+      color: var(--text);
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    .install-cmd .prompt { color: var(--primary); }
+
+    /* Sections */
+    section {
+      padding: 3rem 0;
+      border-top: 1px solid var(--bg-surface);
+    }
+
+    section h2 {
+      color: var(--primary);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      text-transform: lowercase;
+    }
+
+    /* Tools grid */
+    .tools {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .tool {
+      background: var(--bg-surface);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+    }
+
+    .tool-name {
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .tool-desc {
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    /* Install section */
+    .install-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .install-steps code {
+      display: block;
+      background: var(--bg-surface);
+      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    .install-steps code .prompt { color: var(--primary); }
+    .install-steps code .comment { color: var(--muted); }
+
+    /* Features */
+    .features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .feature {
+      background: var(--bg-surface);
+      border-radius: 6px;
+      padding: 1rem;
+    }
+
+    .feature h3 {
+      color: var(--secondary);
+      font-size: 0.85rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .feature p {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--bg-surface);
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    @media (max-width: 600px) {
+      .hero pre { font-size: 0.45rem; }
+      .features { grid-template-columns: 1fr; }
+      .tools { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <pre>
+   ___                       _
+  / _ \ _ __ ___   __ _  ___| |__  _   _
+ | | | | '_ ` _ \ / _` |/ __| '_ \| | | |
+ | |_| | | | | | | (_| | (__| | | | |_| |
+  \___/|_| |_| |_|\__,_|\___|_| |_|\__, |
+                                    |___/</pre>
+      <h1>Tiling window manager setup for macOS</h1>
+      <div class="install-cmd">
+        <span class="prompt">$</span> brew tap dough654/omachy && brew install omachy && omachy install
+      </div>
+    </div>
+
+    <section>
+      <h2>what you get</h2>
+      <div class="tools">
+        <div class="tool">
+          <div class="tool-name">AeroSpace</div>
+          <div class="tool-desc">Tiling window manager</div>
+        </div>
+        <div class="tool">
+          <div class="tool-name">SketchyBar</div>
+          <div class="tool-desc">Custom menu bar</div>
+        </div>
+        <div class="tool">
+          <div class="tool-name">JankyBorders</div>
+          <div class="tool-desc">Window border highlights</div>
+        </div>
+        <div class="tool">
+          <div class="tool-name">Ghostty</div>
+          <div class="tool-desc">Terminal emulator</div>
+        </div>
+        <div class="tool">
+          <div class="tool-name">Neovim + Kickstart</div>
+          <div class="tool-desc">Text editor</div>
+        </div>
+        <div class="tool">
+          <div class="tool-name">Tmux + TPM</div>
+          <div class="tool-desc">Terminal multiplexer</div>
+        </div>
+        <div class="tool">
+          <div class="tool-name">Starship</div>
+          <div class="tool-desc">Cross-shell prompt</div>
+        </div>
+        <div class="tool">
+          <div class="tool-name">fzf</div>
+          <div class="tool-desc">Fuzzy finder</div>
+        </div>
+        <div class="tool">
+          <div class="tool-name">Lazygit</div>
+          <div class="tool-desc">Git TUI</div>
+        </div>
+        <div class="tool">
+          <div class="tool-name">Atuin</div>
+          <div class="tool-desc">Shell history search</div>
+        </div>
+        <div class="tool">
+          <div class="tool-name">Nerd Fonts</div>
+          <div class="tool-desc">Hack + JetBrains Mono</div>
+        </div>
+        <div class="tool">
+          <div class="tool-name">Node, Python, Go</div>
+          <div class="tool-desc">Language runtimes</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>install</h2>
+      <div class="install-steps">
+        <code><span class="comment"># add the tap</span><br><span class="prompt">$</span> brew tap dough654/omachy</code>
+        <code><span class="comment"># install the binary</span><br><span class="prompt">$</span> brew install omachy</code>
+        <code><span class="comment"># run the installer</span><br><span class="prompt">$</span> omachy install</code>
+      </div>
+    </section>
+
+    <section>
+      <h2>features</h2>
+      <div class="features">
+        <div class="feature">
+          <h3>NeverOverwrite</h3>
+          <p>Sensitive configs (.zshrc, .tmux.conf) are never overwritten — your customizations are safe.</p>
+        </div>
+        <div class="feature">
+          <h3>Clean Uninstall</h3>
+          <p>Full reversal: removes packages, restores configs, and resets macOS defaults to their original values.</p>
+        </div>
+        <div class="feature">
+          <h3>Backup &amp; Restore</h3>
+          <p>Existing configs are backed up with timestamps before any changes are made.</p>
+        </div>
+        <div class="feature">
+          <h3>Named Workspaces</h3>
+          <p>Optional --named-workspaces flag for Dev, Web, Messaging, Email, and Scratch workspace labels.</p>
+        </div>
+        <div class="feature">
+          <h3>Drift Detection</h3>
+          <p>Run omachy status to see which deployed configs have been modified since installation.</p>
+        </div>
+        <div class="feature">
+          <h3>Single Binary</h3>
+          <p>All configs are embedded — no external files, no network fetches during install.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <a href="https://github.com/dough654/Omachy">GitHub</a> &middot; MIT License &middot; Inspired by <a href="https://omakub.org/">Omarchy</a>
+    </footer>
+  </div>
+</body>
+</html>

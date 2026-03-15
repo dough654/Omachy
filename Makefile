@@ -1,6 +1,6 @@
 BINARY := omachy
 VERSION ?= dev
-LDFLAGS := -ldflags "-X github.com/dough654/Omachy/cmd.Version=$(VERSION)"
+LDFLAGS := -ldflags "-X main.version=$(VERSION)"
 
 .PHONY: build run clean tidy
 

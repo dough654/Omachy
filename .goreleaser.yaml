@@ -1,0 +1,49 @@
+version: 2
+
+project_name: omachy
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - main: .
+    binary: omachy
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X main.version={{.Version}}
+
+archives:
+  - format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+checksum:
+  name_template: "checksums.txt"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^ci:"
+
+brews:
+  - repository:
+      owner: dough654
+      name: homebrew-omachy
+      token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
+    directory: Formula
+    homepage: "https://dough654.github.io/Omachy/"
+    description: "Tiling window manager setup for macOS"
+    license: "MIT"
+    install: |
+      bin.install "omachy"
+    test: |
+      system "#{bin}/omachy", "version"
