@@ -89,6 +89,29 @@ func stopServices(p *tea.Program, opts Options) error {
 			log(fmt.Sprintf("    Warning: %v", err))
 		}
 	}
+
+	// Kill processes that Omachy started directly (not managed as brew services).
+	// AeroSpace launches sketchybar and borders via after-startup-command.
+	// Only kill processes that were not already running before install.
+	preExisting := make(map[string]bool, len(state.RunningProcesses))
+	for _, p := range state.RunningProcesses {
+		preExisting[p] = true
+	}
+	for _, proc := range []string{"AeroSpace", "sketchybar", "borders"} {
+		if preExisting[proc] {
+			log(fmt.Sprintf("    Skipping %s (was running before install)", proc))
+			continue
+		}
+		if opts.DryRun {
+			log(fmt.Sprintf("==> Would kill process: %s", proc))
+			continue
+		}
+		log(fmt.Sprintf("==> Killing %s", proc))
+		if _, err := shell.Run("pkill", "-x", proc); err != nil {
+			log(fmt.Sprintf("    %s was not running", proc))
+		}
+	}
+
 	return nil
 }
 

@@ -89,6 +89,16 @@ func runSystem(p *tea.Program, opts Options) error {
 	// Note: sketchybar and borders are started by AeroSpace via after-startup-command,
 	// not as brew services, to avoid duplicate instances.
 
+	// Record which managed processes are already running before we start them,
+	// so uninstall only kills processes that Omachy started.
+	if !opts.DryRun {
+		for _, proc := range []string{"AeroSpace", "sketchybar", "borders"} {
+			if isProcessRunning(proc) {
+				state.RunningProcesses = appendUnique(state.RunningProcesses, proc)
+			}
+		}
+	}
+
 	// Start AeroSpace and ensure it has accessibility permissions
 	if !opts.DryRun {
 		log("==> Starting AeroSpace")
@@ -149,9 +159,13 @@ func writeDefault(domain, key, typ, value string) error {
 	return err
 }
 
-func isAerospaceRunning() bool {
-	result, err := shell.Run("pgrep", "-x", "AeroSpace")
+func isProcessRunning(name string) bool {
+	result, err := shell.Run("pgrep", "-x", name)
 	return err == nil && strings.TrimSpace(result.Stdout) != ""
+}
+
+func isAerospaceRunning() bool {
+	return isProcessRunning("AeroSpace")
 }
 
 func waitForAerospaceRunning(log func(string)) {
