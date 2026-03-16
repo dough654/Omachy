@@ -164,6 +164,9 @@ assert_eq "dev-session.sh deployed" "yes" "$dev_session"
 zshrc=$(ssh_cmd "cat ~/.zshrc 2>/dev/null || echo ''")
 assert_contains "zshrc has Omachy managed block" "Omachy managed" "$zshrc"
 assert_contains "zshrc has starship init" "starship init zsh" "$zshrc"
+assert_contains "zshrc has vim motions" "set -o vi" "$zshrc"
+assert_contains "zshrc has syntax highlighting" "zsh-syntax-highlighting" "$zshrc"
+assert_contains "zshrc has neofetch" "neofetch" "$zshrc"
 assert_contains "zshrc has dev function" "dev()" "$zshrc"
 
 # Check macOS defaults were applied
