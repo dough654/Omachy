@@ -2,10 +2,11 @@ package manifest
 
 // Package describes a Homebrew package to install.
 type Package struct {
-	Name    string
-	Tap     string // empty if no tap needed
-	Cask    bool
-	Service bool // true if this package runs as a brew service
+	Name         string
+	Tap          string // empty if no tap needed
+	Cask         bool
+	Service      bool   // true if this package runs as a brew service
+	SkipIfBinary string // if set, skip install when this binary is already on PATH
 }
 
 // ConfigMapping describes where an embedded config should be deployed.
@@ -46,9 +47,9 @@ func Packages() []Package {
 		{Name: "lazygit"},
 		{Name: "lazydocker"},
 		{Name: "atuin"},
-		{Name: "node"},
-		{Name: "python"},
-		{Name: "go"},
+		{Name: "node", SkipIfBinary: "node"},
+		{Name: "python", SkipIfBinary: "python3"},
+		{Name: "go", SkipIfBinary: "go"},
 	}
 }
 

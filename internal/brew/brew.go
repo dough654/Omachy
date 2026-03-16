@@ -46,7 +46,17 @@ func Install(name string, cask bool, onLine func(string)) error {
 	args = append(args, name)
 
 	onLine(fmt.Sprintf("==> Installing %s", name))
-	return shell.RunStreaming("brew", args, onLine)
+	if err := shell.RunStreaming("brew", args, onLine); err != nil {
+		// brew install exits 1 when the package installs but linking fails
+		// (e.g. another formula owns the symlinks). The package is still
+		// usable in the Cellar, so treat this as a warning, not a failure.
+		if IsInstalled(name, cask) {
+			onLine(fmt.Sprintf("    Warning: %s installed but not linked (conflicting package)", name))
+			return nil
+		}
+		return err
+	}
+	return nil
 }
 
 // IsInstalled checks if a formula or cask is installed.
