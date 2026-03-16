@@ -14,12 +14,14 @@ var (
 	uninstallDryRun      bool
 	uninstallKeepConfigs bool
 	uninstallKeepPkgs    bool
+	uninstallQuiet       bool
 )
 
 func init() {
 	uninstallCmd.Flags().BoolVar(&uninstallDryRun, "dry-run", false, "Show what would be done without making changes")
 	uninstallCmd.Flags().BoolVar(&uninstallKeepConfigs, "keep-configs", false, "Keep deployed config files")
 	uninstallCmd.Flags().BoolVar(&uninstallKeepPkgs, "keep-packages", false, "Keep installed packages")
+	uninstallCmd.Flags().BoolVar(&uninstallQuiet, "quiet", false, "Run without the TUI (log to stdout)")
 	rootCmd.AddCommand(uninstallCmd)
 }
 
@@ -34,6 +36,18 @@ var uninstallCmd = &cobra.Command{
 			KeepPackages: uninstallKeepPkgs,
 		}
 
+		uninstallerFn := func(p *tea.Program) {
+			uninstaller.Run(p, opts)
+		}
+
+		if uninstallQuiet {
+			result, err := tui.RunQuiet(uninstallerFn)
+			if err != nil {
+				return err
+			}
+			return result.Err
+		}
+
 		splashOpts := tui.SplashOptions{
 			DryRun:       uninstallDryRun,
 			KeepConfigs:  uninstallKeepConfigs,
@@ -41,9 +55,7 @@ var uninstallCmd = &cobra.Command{
 			Uninstall:    true,
 		}
 
-		result, err := tui.Run(uninstaller.PhaseNames(), func(p *tea.Program) {
-			uninstaller.Run(p, opts)
-		}, splashOpts, Version)
+		result, err := tui.Run(uninstaller.PhaseNames(), uninstallerFn, splashOpts, Version)
 		if err != nil {
 			return err
 		}

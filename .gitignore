@@ -1,4 +1,5 @@
 /omachy
+*-test-bin
 *.exe
 dist/
 .DS_Store

@@ -16,6 +16,7 @@ var (
 	flagVerbose         bool
 	flagSkipBackup      bool
 	flagNamedWorkspaces bool
+	flagQuiet           bool
 )
 
 func init() {
@@ -24,6 +25,7 @@ func init() {
 	installCmd.Flags().BoolVar(&flagVerbose, "verbose", false, "Show detailed output")
 	installCmd.Flags().BoolVar(&flagSkipBackup, "skip-backup", false, "Skip backing up existing configs")
 	installCmd.Flags().BoolVar(&flagNamedWorkspaces, "named-workspaces", false, "Use named workspaces (D/W/M/E/S) with app-to-workspace rules instead of numbered 1-9")
+	installCmd.Flags().BoolVar(&flagQuiet, "quiet", false, "Run without the TUI (log to stdout)")
 	rootCmd.AddCommand(installCmd)
 }
 
@@ -40,6 +42,18 @@ var installCmd = &cobra.Command{
 			NamedWorkspaces: flagNamedWorkspaces,
 		}
 
+		installerFn := func(p *tea.Program) {
+			installer.Run(p, opts)
+		}
+
+		if flagQuiet {
+			result, err := tui.RunQuiet(installerFn)
+			if err != nil {
+				return err
+			}
+			return result.Err
+		}
+
 		splashOpts := tui.SplashOptions{
 			DryRun:          flagDryRun,
 			Force:           flagForce,
@@ -47,9 +61,7 @@ var installCmd = &cobra.Command{
 			NamedWorkspaces: flagNamedWorkspaces,
 		}
 
-		result, err := tui.Run(installer.PhaseNames(), func(p *tea.Program) {
-			installer.Run(p, opts)
-		}, splashOpts, Version)
+		result, err := tui.Run(installer.PhaseNames(), installerFn, splashOpts, Version)
 		if err != nil {
 			return err
 		}
