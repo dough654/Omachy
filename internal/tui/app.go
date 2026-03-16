@@ -29,6 +29,8 @@ type App struct {
 	program         *tea.Program // set after Run() creates the program
 	showConfirm     bool         // true = showing logout confirmation dialog
 	logoutRequested bool         // true = user chose to log out
+	waitingForUser  bool         // true = waiting for user to press Enter
+	waitDone        chan struct{} // signal to unblock the installer goroutine
 }
 
 func NewApp(phaseNames []string, installer InstallerFunc, splashOpts SplashOptions, version string) App {
@@ -79,6 +81,11 @@ func (a App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", "ctrl+c":
 			return a, tea.Quit
 		case "enter":
+			if a.waitingForUser {
+				a.waitingForUser = false
+				close(a.waitDone)
+				return a, nil
+			}
 			if !a.started {
 				a.started = true
 				// Launch the installer goroutine now
@@ -114,6 +121,12 @@ func (a App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case LogLine:
 		a.output.AppendLine(msg.Text)
+
+	case WaitForUser:
+		a.output.AppendLine(msg.Prompt)
+		a.output.AppendLine("    Press [Enter] to continue...")
+		a.waitingForUser = true
+		a.waitDone = msg.Done
 
 	case ProgressUpdate:
 		a.header.Percent = msg.Percent

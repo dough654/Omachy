@@ -51,6 +51,10 @@ func (q *quietApp) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		fmt.Printf("[%s] FAILED: %v\n", msg.Name, msg.Error)
 	case LogLine:
 		fmt.Println(msg.Text)
+	case WaitForUser:
+		fmt.Println(msg.Prompt)
+		fmt.Println("    (quiet mode — skipping wait)")
+		close(msg.Done)
 	case InstallFinished:
 		if msg.Err != nil {
 			fmt.Printf("\nFailed: %v\n", msg.Err)

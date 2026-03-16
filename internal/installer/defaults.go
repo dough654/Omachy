@@ -109,9 +109,25 @@ func runSystem(p *tea.Program, opts Options) error {
 			log("==> AeroSpace is running (Accessibility permissions granted)")
 		} else {
 			log("==> AeroSpace needs Accessibility permissions")
-			log("    Flip the switch for AeroSpace in the dialog that appeared")
-			log("    Then reopen AeroSpace (or it may restart automatically)")
-			waitForAerospaceRunning(log)
+			log("    1. A dialog should have appeared — click 'Open System Settings'")
+			log("    2. Enable the toggle for AeroSpace in Privacy → Accessibility")
+
+			done := make(chan struct{})
+			p.Send(tui.WaitForUser{
+				Prompt: "    When you've granted permissions, confirm below.",
+				Done:   done,
+			})
+			<-done
+
+			log("==> Relaunching AeroSpace...")
+			shell.Run("open", "-a", "AeroSpace")
+			time.Sleep(3 * time.Second)
+
+			if isAerospaceRunning() {
+				log("==> AeroSpace is running!")
+			} else {
+				log("==> AeroSpace still not running — you may need to open it manually")
+			}
 		}
 	} else {
 		log("==> Would start AeroSpace and check Accessibility permissions")
@@ -168,20 +184,6 @@ func isAerospaceRunning() bool {
 	return isProcessRunning("AeroSpace")
 }
 
-func waitForAerospaceRunning(log func(string)) {
-	timeout := 2 * time.Minute
-	interval := 3 * time.Second
-	deadline := time.Now().Add(timeout)
-
-	for time.Now().Before(deadline) {
-		time.Sleep(interval)
-		if isAerospaceRunning() {
-			log("    AeroSpace is running — permissions granted!")
-			return
-		}
-	}
-	log("    Timed out waiting — you can grant permissions later in System Settings → Privacy → Accessibility")
-}
 
 func appendUnique(slice []string, item string) []string {
 	for _, s := range slice {

@@ -33,6 +33,13 @@ type InstallFinished struct {
 	Err error
 }
 
+// WaitForUser asks the user to confirm before continuing.
+// The installer goroutine blocks on Done until the TUI signals it.
+type WaitForUser struct {
+	Prompt string
+	Done   chan struct{}
+}
+
 // All event types implement tea.Msg.
 var (
 	_ tea.Msg = PhaseStarted{}
@@ -41,4 +48,5 @@ var (
 	_ tea.Msg = LogLine{}
 	_ tea.Msg = ProgressUpdate{}
 	_ tea.Msg = InstallFinished{}
+	_ tea.Msg = WaitForUser{}
 )

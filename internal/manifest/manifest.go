@@ -39,6 +39,7 @@ func Packages() []Package {
 		{Name: "borders", Tap: "FelixKratz/formulae"},
 		{Name: "ghostty", Cask: true},
 		{Name: "neovim"},
+		{Name: "tree-sitter"},
 		{Name: "tmux"},
 		{Name: "font-hack-nerd-font", Cask: true},
 		{Name: "font-jetbrains-mono", Cask: true},
