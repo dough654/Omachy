@@ -232,6 +232,7 @@ var shellIntegrations = []struct {
 	{`starship init zsh`, `eval "$(starship init zsh)"`},
 	{`fzf --zsh`, `eval "$(fzf --zsh)"`},
 	{`atuin init zsh`, `eval "$(atuin init zsh)"`},
+	{`dev()`, `dev() { sh ~/.config/omachy/dev-session.sh "$@"; }`},
 }
 
 func updateZshrcBlock(path string, log func(string)) error {

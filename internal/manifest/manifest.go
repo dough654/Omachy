@@ -73,5 +73,6 @@ func Configs() []ConfigMapping {
 		{Source: "ghostty/config", Dest: "~/Library/Application Support/com.mitchellh.ghostty/config", Mode: 0644},
 		{Source: "tmux/tmux.conf", Dest: "~/.tmux.conf", Mode: 0644, NeverOverwrite: true},
 		{Source: "starship.toml", Dest: "~/.config/starship.toml", Mode: 0644},
+		{Source: "omachy/dev-session.sh", Dest: "~/.config/omachy/dev-session.sh", Mode: 0755},
 	}
 }
