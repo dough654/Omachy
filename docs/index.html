@@ -194,6 +194,57 @@
       font-size: 0.75rem;
     }
 
+    /* Demo video */
+    .demo {
+      margin-bottom: 2rem;
+    }
+
+    .demo-desc {
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .demo video {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--bg-surface);
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .demo video:hover {
+      border-color: var(--primary);
+    }
+
+    .demo-hint {
+      color: var(--muted);
+      font-size: 0.7rem;
+      margin-top: 0.5rem;
+    }
+
+    /* Fullscreen overlay */
+    .video-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .video-overlay.active {
+      display: flex;
+    }
+
+    .video-overlay video {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: 8px;
+    }
+
     @media (max-width: 600px) {
       .hero pre { font-size: 0.6rem; }
       .features { grid-template-columns: 1fr; }
@@ -212,7 +263,11 @@
   \___/|_| |_| |_|\__,_|\___|_| |_|\__, |
                                     |___/</pre>
       <h1>Omarchy for the rest of us</h1>
-      <video src="omachy.mp4" autoplay loop muted playsinline style="width:100%;border-radius:8px;margin-bottom:2rem;border:1px solid var(--bg-surface);"></video>
+      <div class="demo">
+        <p class="demo-desc">Tiling windows, custom menu bar, Neovim, and a terminal that feels like home — on macOS, from a single command.</p>
+        <video id="demo-video" src="omachy.mp4" autoplay loop muted playsinline></video>
+        <p class="demo-hint">click to expand</p>
+      </div>
       <div class="install-cmd">
         <span><span class="prompt">$</span> brew tap dough654/omachy && brew install omachy && omachy install</span>
         <button class="copy-btn" data-cmd="brew tap dough654/omachy && brew install omachy && omachy install">copy</button>
@@ -316,6 +371,9 @@
       <a href="https://github.com/dough654/Omachy">GitHub</a> &middot; MIT License &middot; Inspired by <a href="https://omakub.org/">Omarchy</a>
     </footer>
   </div>
+  <div class="video-overlay" id="video-overlay">
+    <video id="overlay-video" src="omachy.mp4" autoplay loop muted playsinline></video>
+  </div>
   <script>
     document.querySelectorAll('.copy-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
@@ -329,6 +387,19 @@
           }, 1500);
         });
       });
+    });
+
+    var demoVideo = document.getElementById('demo-video');
+    var overlay = document.getElementById('video-overlay');
+    var overlayVideo = document.getElementById('overlay-video');
+
+    demoVideo.addEventListener('click', function() {
+      overlay.classList.add('active');
+      overlayVideo.currentTime = demoVideo.currentTime;
+    });
+
+    overlay.addEventListener('click', function() {
+      overlay.classList.remove('active');
     });
   </script>
 </body>
