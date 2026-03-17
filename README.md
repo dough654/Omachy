@@ -6,8 +6,6 @@ https://github.com/user-attachments/assets/ba95b0f2-8d99-4987-b2f5-fa932f45a259
 
 Omachy brings the [Omarchy](https://omakub.org/) experience to macOS — a tiling WM, custom menu bar, terminal emulator, editor, and sane system defaults, all configured in one shot. For people who'd rather be on Linux but can't.
 
-<video src="https://github.com/dough654/Omachy/raw/master/docs/omachy.mp4" autoplay loop muted playsinline></video>
-
 ## What Gets Installed
 
 | Tool | Type | Description |
@@ -17,11 +15,18 @@ Omachy brings the [Omarchy](https://omakub.org/) experience to macOS — a tilin
 | [JankyBorders](https://github.com/FelixKratz/JankyBorders) | Formula | Window border highlights |
 | [Ghostty](https://ghostty.org/) | Cask | Terminal emulator |
 | [Neovim](https://neovim.io/) | Formula | Text editor (Kickstart.nvim cloned if no config exists) |
+| [tree-sitter](https://tree-sitter.github.io/tree-sitter/) | Formula | Parser generator for syntax highlighting |
 | [Tmux](https://github.com/tmux/tmux) | Formula | Terminal multiplexer (TPM + plugins) |
 | [Starship](https://starship.rs/) | Formula | Cross-shell prompt |
 | [fzf](https://github.com/junegunn/fzf) | Formula | Fuzzy finder |
 | [Lazygit](https://github.com/jesseduffield/lazygit) | Formula | Git TUI |
+| [Lazydocker](https://github.com/jesseduffield/lazydocker) | Formula | Docker TUI |
 | [Atuin](https://atuin.sh/) | Formula | Shell history search & sync |
+| [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) | Formula | Fish-like syntax highlighting for Zsh |
+| [neofetch](https://github.com/dylanaraps/neofetch) | Formula | System info display |
+| [Node.js](https://nodejs.org/) | Formula | JavaScript runtime *(skipped if already installed)* |
+| [Python](https://www.python.org/) | Formula | Python runtime *(skipped if already installed)* |
+| [Go](https://go.dev/) | Formula | Go runtime *(skipped if already installed)* |
 | [Hack Nerd Font](https://www.nerdfonts.com/) | Cask | Nerd Font for SketchyBar icons |
 | [JetBrains Mono](https://www.jetbrains.com/lp/mono/) | Cask | Monospace font for terminal |
 
@@ -37,12 +42,18 @@ Omachy brings the [Omarchy](https://omakub.org/) experience to macOS — a tilin
 | `ghostty/config` | `~/Library/Application Support/com.mitchellh.ghostty/config` |
 | `tmux/tmux.conf` | `~/.tmux.conf` *(NeverOverwrite)* |
 | `starship.toml` | `~/.config/starship.toml` |
-| `zsh/zshrc` | `~/.zshrc` *(NeverOverwrite)* |
-| Kickstart.nvim (cloned) | `~/.config/nvim/` *(skipped if exists)* |
+| `omachy/dev-session.sh` | `~/.config/omachy/dev-session.sh` |
+
+Additionally, the installer:
+
+- Injects shell integrations (Starship, fzf, Atuin, zsh-syntax-highlighting) into `~/.zshrc` via a managed block — existing content is preserved
+- Clones [Kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim) to `~/.config/nvim/` if no Neovim config exists
+- Clones [TPM](https://github.com/tmux-plugins/tpm) to `~/.tmux/plugins/tpm` if not already installed
 
 **macOS system defaults** are adjusted:
 
 - Auto-hide Dock with zero delay and fast animation
+- Set Dock icon size to 48 and hide recent apps
 - Disable MRU Spaces reordering (important for tiling WM)
 - Disable window open/close animations
 - Fastest key repeat rate with shortest initial delay
@@ -93,6 +104,8 @@ Runs the full installation through an interactive TUI with five phases:
 | `--force` | Overwrite existing configs without prompting |
 | `--skip-backup` | Skip backing up existing configs |
 | `--verbose` | Show detailed output |
+| `--named-workspaces` | Use named workspaces (D/W/M/E/S) with app-to-workspace rules instead of numbered 1–9 |
+| `--quiet` | Run without the TUI (log to stdout) |
 
 ### `omachy uninstall`
 
@@ -105,6 +118,7 @@ Reverses the installation — stops services, removes configs, uninstalls packag
 | `--dry-run` | Show what would be done without making changes |
 | `--keep-configs` | Keep deployed config files |
 | `--keep-packages` | Keep installed Homebrew packages |
+| `--quiet` | Run without the TUI (log to stdout) |
 
 ### `omachy doctor`
 
@@ -129,7 +143,7 @@ Prints the version string.
 │   ├── sketchybar/
 │   ├── borders/
 │   ├── ghostty/
-│   ├── nvim/
+│   ├── omachy/
 │   └── tmux/
 ├── cmd/                       # Cobra CLI commands
 │   ├── root.go                # Root command + version var
@@ -158,6 +172,8 @@ Prints the version string.
         ├── app.go             # Root model + state machine
         ├── events.go          # Message types (PhaseStarted, LogLine, etc.)
         ├── splash.go          # Pre-install splash screen
+        ├── confirm.go         # User confirmation prompts
+        ├── quiet.go           # Non-TUI stdout logging mode
         ├── phases.go          # Left panel phase list with status icons
         ├── header.go          # Top bar with title and progress percentage
         ├── output.go          # Scrollable log viewport
@@ -179,17 +195,22 @@ The installer writes `~/.omachy/state.json` with the following structure:
 
 ```json
 {
-  "installed_packages": ["neovim", "tmux", "..."],
+  "installed_packages": [
+    {"name": "neovim"},
+    {"name": "ghostty", "cask": true}
+  ],
+  "installed_taps": ["nikitabobko/tap", "FelixKratz/formulae"],
   "deployed_configs": {
     "/Users/you/.tmux.conf": "sha256hash",
-    "/Users/you/.config/nvim": "sha256hash"
+    "/Users/you/.config/starship.toml": "sha256hash"
   },
   "original_defaults": {
-    "com.apple.dock:autohide": "false",
-    "com.apple.dock:tilesize": "64"
+    "com.apple.dock:autohide": "-bool:false",
+    "com.apple.dock:tilesize": "-int:64"
   },
   "backup_path": "/Users/you/.omachy/backups/20260314-182007",
-  "services": ["sketchybar", "borders"]
+  "services": ["sketchybar", "borders"],
+  "running_processes": ["AeroSpace"]
 }
 ```
 
