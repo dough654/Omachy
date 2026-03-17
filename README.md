@@ -4,7 +4,7 @@
 
 Omachy brings the [Omarchy](https://omakub.org/) experience to macOS — a tiling WM, custom menu bar, terminal emulator, editor, and sane system defaults, all configured in one shot. For people who'd rather be on Linux but can't.
 
-https://raw.githubusercontent.com/dough654/Omachy/master/docs/omachy.mp4
+<video src="https://github.com/dough654/Omachy/raw/master/docs/omachy.mp4" autoplay loop muted playsinline></video>
 
 ## What Gets Installed
 
