@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guide — Omachy</title>
+  <style>
+    :root {
+      --primary: #7C3AED;
+      --secondary: #A78BFA;
+      --bg: #1E1E2E;
+      --bg-surface: #262637;
+      --text: #CDD6F4;
+      --muted: #6C7086;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a { color: var(--secondary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Nav */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--bg-surface);
+      font-size: 0.8rem;
+    }
+
+    nav .back { color: var(--muted); }
+    nav .back:hover { color: var(--secondary); }
+
+    .toc {
+      display: flex;
+      gap: 1.25rem;
+    }
+
+    .toc a { color: var(--muted); }
+    .toc a:hover { color: var(--secondary); text-decoration: none; }
+
+    /* Page header */
+    .page-header {
+      text-align: center;
+      padding: 4rem 0 3rem;
+    }
+
+    .page-header h1 {
+      color: var(--primary);
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-transform: lowercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .page-header p {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* Sections */
+    section {
+      padding: 2.5rem 0;
+      border-top: 1px solid var(--bg-surface);
+    }
+
+    section h2 {
+      color: var(--primary);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      text-transform: lowercase;
+    }
+
+    section h3 {
+      color: var(--secondary);
+      font-size: 0.85rem;
+      margin: 1.5rem 0 0.75rem;
+    }
+
+    section h3:first-of-type { margin-top: 0; }
+
+    section p {
+      font-size: 0.8rem;
+      margin-bottom: 0.75rem;
+    }
+
+    section ul {
+      font-size: 0.8rem;
+      margin-bottom: 0.75rem;
+      padding-left: 1.25rem;
+    }
+
+    section li { margin-bottom: 0.35rem; }
+
+    /* kbd */
+    kbd {
+      background: var(--bg-surface);
+      border: 1px solid var(--muted);
+      color: var(--secondary);
+      border-radius: 4px;
+      padding: 0.1rem 0.4rem;
+      font-family: inherit;
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
+    /* Keybinding rows */
+    .keybinding {
+      display: flex;
+      align-items: baseline;
+      background: var(--bg-surface);
+      border-radius: 6px;
+      padding: 0.4rem 0.75rem;
+      margin-bottom: 0.35rem;
+      font-size: 0.8rem;
+    }
+
+    .keybinding .keys {
+      min-width: 180px;
+      flex-shrink: 0;
+    }
+
+    .keybinding .action {
+      color: var(--muted);
+    }
+
+    /* Quick reference table */
+    details {
+      margin-bottom: 1rem;
+    }
+
+    details summary {
+      cursor: pointer;
+      color: var(--secondary);
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    details summary:hover { text-decoration: underline; }
+
+    .ref-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+    }
+
+    .ref-table th {
+      text-align: left;
+      color: var(--muted);
+      font-weight: 600;
+      padding: 0.35rem 0.5rem;
+      border-bottom: 1px solid var(--bg-surface);
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+    }
+
+    .ref-table td {
+      padding: 0.3rem 0.5rem;
+    }
+
+    .ref-table td:first-child {
+      white-space: nowrap;
+    }
+
+    .ref-table td:last-child {
+      color: var(--muted);
+    }
+
+    .ref-table tr.separator td {
+      padding: 0.6rem 0.5rem 0.35rem;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--bg-surface);
+    }
+
+    /* Code blocks */
+    .code-block {
+      background: var(--bg-surface);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      font-size: 0.8rem;
+      margin-bottom: 0.75rem;
+      overflow-x: auto;
+    }
+
+    .code-block .prompt { color: var(--primary); }
+    .code-block .comment { color: var(--muted); }
+
+    /* Tip callout */
+    .tip {
+      background: var(--bg-surface);
+      border-left: 3px solid var(--primary);
+      border-radius: 0 6px 6px 0;
+      padding: 0.75rem 1rem;
+      font-size: 0.8rem;
+      margin: 1rem 0;
+    }
+
+    .tip strong { color: var(--secondary); }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--bg-surface);
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    @media (max-width: 600px) {
+      .toc { display: none; }
+      .keybinding .keys { min-width: 140px; }
+      .page-header { padding: 3rem 0 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <a class="back" href="index.html">&larr; omachy</a>
+      <div class="toc">
+        <a href="#windows">windows</a>
+        <a href="#terminal">terminal</a>
+        <a href="#menubar">menu bar</a>
+        <a href="#dev">dev</a>
+      </div>
+    </nav>
+
+    <div class="page-header">
+      <h1>guide</h1>
+      <p>Everything you need to know after installing Omachy</p>
+    </div>
+
+    <!-- Quick Reference -->
+    <section>
+      <h2>quick reference</h2>
+      <details>
+        <summary>expand all keybindings</summary>
+        <table class="ref-table">
+          <tr class="separator"><td colspan="2">Focus</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>H</kbd></td><td>Focus left</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>J</kbd></td><td>Focus down</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>K</kbd></td><td>Focus up</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>L</kbd></td><td>Focus right</td></tr>
+
+          <tr class="separator"><td colspan="2">Move</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>H</kbd></td><td>Move window left</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>J</kbd></td><td>Move window down</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>K</kbd></td><td>Move window up</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>L</kbd></td><td>Move window right</td></tr>
+
+          <tr class="separator"><td colspan="2">Layout</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>/</kbd></td><td>Toggle tiles H/V</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>,</kbd></td><td>Toggle accordion H/V</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>Space</kbd></td><td>Toggle floating</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>F</kbd></td><td>Fullscreen</td></tr>
+
+          <tr class="separator"><td colspan="2">Workspace</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>1</kbd>-<kbd>9</kbd></td><td>Switch to workspace 1-9</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>1</kbd>-<kbd>9</kbd></td><td>Move window to workspace 1-9</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>Tab</kbd></td><td>Previous workspace</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>Tab</kbd></td><td>Move workspace to next monitor</td></tr>
+
+          <tr class="separator"><td colspan="2">Workspace (Named)</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>D</kbd></td><td>Dev workspace</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>W</kbd></td><td>Web workspace</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>M</kbd></td><td>Messages workspace</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>E</kbd></td><td>Email workspace</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>S</kbd></td><td>Scratch workspace</td></tr>
+
+          <tr class="separator"><td colspan="2">Window</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>Enter</kbd></td><td>Open new terminal</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>Q</kbd></td><td>Close window</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>-</kbd></td><td>Resize smaller</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>=</kbd></td><td>Resize larger</td></tr>
+
+          <tr class="separator"><td colspan="2">Service Mode</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>;</kbd></td><td>Enter service mode</td></tr>
+          <tr><td><kbd>Esc</kbd></td><td>Reload config &amp; exit</td></tr>
+          <tr><td><kbd>R</kbd></td><td>Flatten workspace tree</td></tr>
+          <tr><td><kbd>F</kbd></td><td>Toggle floating</td></tr>
+          <tr><td><kbd>Backspace</kbd></td><td>Close all except current</td></tr>
+
+          <tr class="separator"><td colspan="2">Resize Mode</td></tr>
+          <tr><td><kbd>Alt</kbd> <kbd>R</kbd></td><td>Enter resize mode</td></tr>
+          <tr><td><kbd>H</kbd> / <kbd>L</kbd></td><td>Resize width</td></tr>
+          <tr><td><kbd>J</kbd> / <kbd>K</kbd></td><td>Resize height</td></tr>
+          <tr><td><kbd>Enter</kbd> or <kbd>Esc</kbd></td><td>Exit resize mode</td></tr>
+
+          <tr class="separator"><td colspan="2">Tmux Panes</td></tr>
+          <tr><td><kbd>Ctrl-B</kbd> <kbd>V</kbd></td><td>Split horizontal</td></tr>
+          <tr><td><kbd>Ctrl-B</kbd> <kbd>X</kbd></td><td>Split vertical</td></tr>
+          <tr><td><kbd>Ctrl-B</kbd> <kbd>H/J/K/L</kbd></td><td>Navigate panes</td></tr>
+          <tr><td><kbd>Ctrl-B</kbd> <kbd>Shift</kbd> <kbd>H/J/K/L</kbd></td><td>Resize panes</td></tr>
+
+          <tr class="separator"><td colspan="2">Tmux Windows</td></tr>
+          <tr><td><kbd>Ctrl-B</kbd> <kbd>C</kbd></td><td>New window</td></tr>
+          <tr><td><kbd>Ctrl-B</kbd> <kbd>1</kbd>-<kbd>9</kbd></td><td>Switch to window N</td></tr>
+          <tr><td><kbd>Ctrl-B</kbd> <kbd>N</kbd> / <kbd>P</kbd></td><td>Next / previous window</td></tr>
+          <tr><td><kbd>Ctrl-B</kbd> <kbd>R</kbd></td><td>Reload tmux config</td></tr>
+
+          <tr class="separator"><td colspan="2">Tmux Copy Mode</td></tr>
+          <tr><td><kbd>Ctrl-B</kbd> <kbd>[</kbd></td><td>Enter copy mode</td></tr>
+          <tr><td><kbd>V</kbd></td><td>Begin selection</td></tr>
+          <tr><td><kbd>Shift</kbd> <kbd>V</kbd></td><td>Select line</td></tr>
+          <tr><td><kbd>Y</kbd></td><td>Copy to clipboard</td></tr>
+        </table>
+      </details>
+    </section>
+
+    <!-- Managing Windows -->
+    <section id="windows">
+      <h2>managing windows</h2>
+      <p>AeroSpace is a tiling window manager — windows automatically arrange themselves to fill the screen. All keybindings use <kbd>Alt</kbd> (Option) as the modifier.</p>
+
+      <h3>Focus &amp; Move</h3>
+      <p>Navigate between windows with vim-style keys:</p>
+      <div class="keybinding"><span class="keys"><kbd>Alt</kbd> <kbd>H/J/K/L</kbd></span><span class="action">Focus left / down / up / right</span></div>
+      <div class="keybinding"><span class="keys"><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>H/J/K/L</kbd></span><span class="action">Move window left / down / up / right</span></div>
+      <p>Open a new terminal with <kbd>Alt</kbd> <kbd>Enter</kbd> and close any window with <kbd>Alt</kbd> <kbd>Q</kbd>.</p>
+
+      <h3>Layouts</h3>
+      <p>AeroSpace supports several layout modes:</p>
+      <div class="keybinding"><span class="keys"><kbd>Alt</kbd> <kbd>/</kbd></span><span class="action">Toggle between horizontal and vertical tiles</span></div>
+      <div class="keybinding"><span class="keys"><kbd>Alt</kbd> <kbd>,</kbd></span><span class="action">Toggle between horizontal and vertical accordion</span></div>
+      <div class="keybinding"><span class="keys"><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>Space</kbd></span><span class="action">Toggle floating / tiling</span></div>
+      <div class="keybinding"><span class="keys"><kbd>Alt</kbd> <kbd>F</kbd></span><span class="action">macOS native fullscreen</span></div>
+      <p><strong>Tiles</strong> split the screen evenly between windows. <strong>Accordion</strong> stacks windows and shows one at a time, like tabs. <strong>Floating</strong> lets you position a window freely.</p>
+
+      <h3>Workspaces</h3>
+      <p>By default, workspaces are numbered 1-9:</p>
+      <div class="keybinding"><span class="keys"><kbd>Alt</kbd> <kbd>1</kbd>-<kbd>9</kbd></span><span class="action">Switch to workspace</span></div>
+      <div class="keybinding"><span class="keys"><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>1</kbd>-<kbd>9</kbd></span><span class="action">Move window to workspace</span></div>
+      <div class="keybinding"><span class="keys"><kbd>Alt</kbd> <kbd>Tab</kbd></span><span class="action">Switch to previous workspace</span></div>
+      <p>If you installed with <code>--named-workspaces</code>, workspaces are named instead:</p>
+      <div class="keybinding"><span class="keys"><kbd>Alt</kbd> <kbd>D</kbd></span><span class="action">Dev</span></div>
+      <div class="keybinding"><span class="keys"><kbd>Alt</kbd> <kbd>W</kbd></span><span class="action">Web</span></div>
+      <div class="keybinding"><span class="keys"><kbd>Alt</kbd> <kbd>M</kbd></span><span class="action">Messages</span></div>
+      <div class="keybinding"><span class="keys"><kbd>Alt</kbd> <kbd>E</kbd></span><span class="action">Email</span></div>
+      <div class="keybinding"><span class="keys"><kbd>Alt</kbd> <kbd>S</kbd></span><span class="action">Scratch</span></div>
+      <p>Named workspaces also auto-route apps: Ghostty and Safari go to Dev, Chrome to Web, Slack and Teams to Messages, and Mail to Email.</p>
+
+      <h3>Service Mode</h3>
+      <p>Service mode provides advanced window operations. Press <kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>;</kbd> to enter, then:</p>
+      <div class="keybinding"><span class="keys"><kbd>Esc</kbd></span><span class="action">Reload config &amp; exit</span></div>
+      <div class="keybinding"><span class="keys"><kbd>R</kbd></span><span class="action">Flatten workspace tree (reset layout)</span></div>
+      <div class="keybinding"><span class="keys"><kbd>F</kbd></span><span class="action">Toggle floating</span></div>
+      <div class="keybinding"><span class="keys"><kbd>Backspace</kbd></span><span class="action">Close all windows except current</span></div>
+      <div class="keybinding"><span class="keys"><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>H/J/K/L</kbd></span><span class="action">Join window with neighbor</span></div>
+      <p>Each action automatically exits service mode.</p>
+
+      <h3>Resize Mode</h3>
+      <p>Press <kbd>Alt</kbd> <kbd>R</kbd> to enter resize mode, then use vim keys to resize:</p>
+      <div class="keybinding"><span class="keys"><kbd>H</kbd> / <kbd>L</kbd></span><span class="action">Shrink / grow width</span></div>
+      <div class="keybinding"><span class="keys"><kbd>J</kbd> / <kbd>K</kbd></span><span class="action">Grow / shrink height</span></div>
+      <div class="keybinding"><span class="keys"><kbd>-</kbd> / <kbd>=</kbd></span><span class="action">Smart shrink / grow</span></div>
+      <p>Press <kbd>Enter</kbd> or <kbd>Esc</kbd> to exit resize mode.</p>
+    </section>
+
+    <!-- Terminal -->
+    <section id="terminal">
+      <h2>using the terminal</h2>
+
+      <h3>Ghostty</h3>
+      <p>Your terminal is Ghostty with Catppuccin Mocha theme, JetBrains Mono font at 13pt, and a slightly transparent background (95% opacity). The titlebar is hidden for a cleaner look.</p>
+
+      <h3>Tmux</h3>
+      <p>Tmux is your terminal multiplexer. The prefix key is <kbd>Ctrl-B</kbd> — press it before any tmux command.</p>
+
+      <p><strong>Splits &amp; panes:</strong></p>
+      <div class="keybinding"><span class="keys"><kbd>Ctrl-B</kbd> <kbd>V</kbd></span><span class="action">Split horizontal</span></div>
+      <div class="keybinding"><span class="keys"><kbd>Ctrl-B</kbd> <kbd>X</kbd></span><span class="action">Split vertical</span></div>
+      <div class="keybinding"><span class="keys"><kbd>Ctrl-B</kbd> <kbd>H/J/K/L</kbd></span><span class="action">Navigate between panes</span></div>
+      <div class="keybinding"><span class="keys"><kbd>Ctrl-B</kbd> <kbd>Shift</kbd> <kbd>H/J/K/L</kbd></span><span class="action">Resize panes</span></div>
+
+      <p><strong>Windows:</strong></p>
+      <div class="keybinding"><span class="keys"><kbd>Ctrl-B</kbd> <kbd>C</kbd></span><span class="action">New window</span></div>
+      <div class="keybinding"><span class="keys"><kbd>Ctrl-B</kbd> <kbd>1</kbd>-<kbd>9</kbd></span><span class="action">Switch to window by number</span></div>
+      <div class="keybinding"><span class="keys"><kbd>Ctrl-B</kbd> <kbd>N</kbd> / <kbd>P</kbd></span><span class="action">Next / previous window</span></div>
+
+      <p><strong>Copy mode</strong> uses vi keybindings. Press <kbd>Ctrl-B</kbd> <kbd>[</kbd> to enter, <kbd>V</kbd> to select, <kbd>Y</kbd> to copy to system clipboard.</p>
+
+      <p>The status bar uses the Dracula theme. Windows and panes are numbered starting at 1. Mouse support is enabled.</p>
+
+      <h3>Zsh</h3>
+      <p>Your shell includes several enhancements:</p>
+      <ul>
+        <li><strong>Starship</strong> — minimal, informative prompt showing git status, language versions, and more</li>
+        <li><strong>fzf</strong> — fuzzy finder for files and history (<kbd>Ctrl-R</kbd> for history, <kbd>Ctrl-T</kbd> for files)</li>
+        <li><strong>Atuin</strong> — enhanced shell history search, synced and searchable</li>
+        <li><strong>Syntax highlighting</strong> — commands are colored as you type</li>
+        <li><strong>Autosuggestions</strong> — ghost text suggestions from your history</li>
+        <li><strong>Vi mode</strong> — press <kbd>Esc</kbd> for normal mode, <kbd>I</kbd> to return to insert</li>
+        <li><strong>neofetch</strong> — system info displayed on shell startup</li>
+      </ul>
+    </section>
+
+    <!-- Menu Bar -->
+    <section id="menubar">
+      <h2>menu bar</h2>
+      <p>SketchyBar replaces the default macOS menu bar with a custom status bar at the top of your screen.</p>
+
+      <h3>Left Side</h3>
+      <ul>
+        <li><strong>Workspace indicators</strong> — numbered bubbles showing your AeroSpace workspaces; the active one is highlighted</li>
+        <li><strong>App name</strong> — the name of the currently focused application</li>
+      </ul>
+
+      <h3>Right Side</h3>
+      <ul>
+        <li><strong>CPU</strong> — current CPU usage percentage</li>
+        <li><strong>Memory</strong> — current memory usage</li>
+        <li><strong>Volume</strong> — system volume level</li>
+        <li><strong>Battery</strong> — charge level and status</li>
+        <li><strong>Clock</strong> — current date and time</li>
+      </ul>
+      <p>The bar uses a translucent Catppuccin Mocha background with rounded corners and blur.</p>
+    </section>
+
+    <!-- Dev Sessions -->
+    <section id="dev">
+      <h2>dev sessions</h2>
+      <p>The <code>dev</code> command creates a purpose-built tmux development environment for any project.</p>
+
+      <h3>Usage</h3>
+      <div class="code-block"><span class="prompt">$</span> dev ~/projects/myapp</div>
+      <p>If no path is given, it uses the current directory. The session is named after the directory.</p>
+
+      <h3>What It Creates</h3>
+      <p>Four tmux windows, each with a specific role:</p>
+      <div class="keybinding"><span class="keys"><kbd>Ctrl-B</kbd> <kbd>1</kbd> &mdash; nvim</span><span class="action">Opens Neovim on the project root (you land here)</span></div>
+      <div class="keybinding"><span class="keys"><kbd>Ctrl-B</kbd> <kbd>2</kbd> &mdash; git</span><span class="action">Opens Lazygit for staging, committing, browsing</span></div>
+      <div class="keybinding"><span class="keys"><kbd>Ctrl-B</kbd> <kbd>3</kbd> &mdash; server</span><span class="action">Empty window for dev servers, watchers, etc.</span></div>
+      <div class="keybinding"><span class="keys"><kbd>Ctrl-B</kbd> <kbd>4</kbd> &mdash; scratch</span><span class="action">Empty window for ad-hoc commands</span></div>
+
+      <h3>Session Reuse</h3>
+      <p>Running <code>dev</code> again for the same project reattaches to the existing session instead of creating a new one. Your state is preserved.</p>
+
+      <h3>Example Workflow</h3>
+      <div class="code-block">
+        <span class="comment"># start a dev session</span><br>
+        <span class="prompt">$</span> dev ~/projects/myapp<br><br>
+        <span class="comment"># you land in Neovim (window 1) — edit code</span><br>
+        <span class="comment"># Ctrl-B 2 → stage and commit with Lazygit</span><br>
+        <span class="comment"># Ctrl-B 3 → start your dev server</span><br>
+        <span class="comment"># Ctrl-B 1 → back to the editor</span>
+      </div>
+
+      <div class="tip">
+        <strong>Tip:</strong> Combine with AeroSpace workspaces — keep your dev session in the Dev workspace (<kbd>Alt</kbd> <kbd>D</kbd> with named workspaces) and your browser in Web (<kbd>Alt</kbd> <kbd>W</kbd>).
+      </div>
+    </section>
+
+    <!-- Window Borders -->
+    <section>
+      <h2>window borders</h2>
+      <p>JankyBorders draws a subtle border around each window. The active window gets a purple glow, while inactive windows have a faint gray border. This makes it easy to tell which window has focus at a glance.</p>
+    </section>
+
+    <footer>
+      <a href="index.html">Home</a> &middot; <a href="https://github.com/dough654/Omachy">GitHub</a> &middot; MIT License &middot; Inspired by <a href="https://omakub.org/">Omarchy</a>
+    </footer>
+  </div>
+</body>
+</html>

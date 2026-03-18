@@ -8,7 +8,11 @@
       "WebFetch(domain:learn.omacom.io)",
       "Bash(go get:*)",
       "Bash(go build:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(gh issue:*)",
+      "Bash(grep:*)",
+      "WebFetch(domain:gist.github.com)",
+      "Bash(find /Users/douglas.gerhardt/dev/omachy/configs -type f -name *.toml -o -name *.conf -o -name *rc -o -name config)"
     ]
   }
 }

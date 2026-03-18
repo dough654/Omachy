@@ -23,6 +23,7 @@ Omachy brings the [Omarchy](https://omakub.org/) experience to macOS — a tilin
 | [Lazydocker](https://github.com/jesseduffield/lazydocker) | Formula | Docker TUI |
 | [Atuin](https://atuin.sh/) | Formula | Shell history search & sync |
 | [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) | Formula | Fish-like syntax highlighting for Zsh |
+| [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions) | Formula | Fish-like inline suggestions from history |
 | [neofetch](https://github.com/dylanaraps/neofetch) | Formula | System info display |
 | [Node.js](https://nodejs.org/) | Formula | JavaScript runtime *(skipped if already installed)* |
 | [Python](https://www.python.org/) | Formula | Python runtime *(skipped if already installed)* |
@@ -46,7 +47,7 @@ Omachy brings the [Omarchy](https://omakub.org/) experience to macOS — a tilin
 
 Additionally, the installer:
 
-- Injects shell integrations (Starship, fzf, Atuin, zsh-syntax-highlighting) into `~/.zshrc` via a managed block — existing content is preserved
+- Injects shell integrations (Starship, fzf, Atuin, zsh-syntax-highlighting, zsh-autosuggestions) into `~/.zshrc` via a managed block — existing content is preserved
 - Clones [Kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim) to `~/.config/nvim/` if no Neovim config exists
 - Clones [TPM](https://github.com/tmux-plugins/tpm) to `~/.tmux/plugins/tpm` if not already installed
 
