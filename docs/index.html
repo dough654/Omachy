@@ -263,9 +263,10 @@
  | |_| | | | | | | (_| | (__| | | | |_| |
   \___/|_| |_| |_|\__,_|\___|_| |_|\__, |
                                     |___/</pre>
-      <h1>Omarchy for the rest of us</h1>
+      <h1>A complete tiling window manager setup for macOS — one command, zero config</h1>
+      <p style="color: var(--muted); font-size: 0.8rem; margin-bottom: 2rem;">Omarchy for the rest of us</p>
       <div class="demo">
-        <p class="demo-desc">Tiling windows, custom menu bar, Neovim, and a terminal that feels like home — on macOS, from a single command.</p>
+        <p class="demo-desc" style="color: var(--text); font-size: 0.85rem; max-width: 600px; margin: 0 auto 1rem;">Omachy transforms your Mac into a keyboard-driven development environment. Tiling windows that organize themselves, a custom menu bar, Neovim, Tmux, and a terminal tuned for productivity — all configured and wired together from a single command. No manual setup, no dotfile wrangling.</p>
         <video id="demo-video" src="omachy.mp4" autoplay loop muted playsinline></video>
         <p class="demo-hint">click to expand</p>
       </div>
@@ -275,6 +276,24 @@
       </div>
       <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--muted);">after install, read the <a href="guide.html">guide</a></p>
     </div>
+
+    <section>
+      <h2>why omachy</h2>
+      <div class="features" style="grid-template-columns: 1fr;">
+        <div class="feature">
+          <h3>What is a tiling window manager?</h3>
+          <p>Instead of dragging and resizing windows by hand, a tiling WM automatically arranges them to fill your screen — no overlap, no wasted space. You navigate and rearrange with keyboard shortcuts instead of a mouse. It's how most Linux power users work, and Omachy brings that workflow to macOS.</p>
+        </div>
+        <div class="feature">
+          <h3>Who is this for?</h3>
+          <p>Developers who want a Linux-like, keyboard-driven workflow on macOS. If you've seen setups like Omarchy, Hyprland, or i3 and wanted that on your Mac — but didn't want to spend a weekend manually configuring a dozen tools — this is for you.</p>
+        </div>
+        <div class="feature">
+          <h3>What happens when I run it?</h3>
+          <p>The installer checks your system, backs up existing configs, installs ~15 tools via Homebrew, deploys pre-tuned configurations, and adjusts macOS system settings. Takes about 10 minutes. Fully reversible with <code style="background: var(--bg); padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.75rem;">omachy uninstall</code>.</p>
+        </div>
+      </div>
+    </section>
 
     <section>
       <h2>what you get</h2>
@@ -331,15 +350,6 @@
     </section>
 
     <section>
-      <h2>install</h2>
-      <div class="install-steps">
-        <code><span class="cmd-text"><span class="comment"># add the tap</span><br><span class="prompt">$</span> brew tap dough654/omachy</span><button class="copy-btn" data-cmd="brew tap dough654/omachy">copy</button></code>
-        <code><span class="cmd-text"><span class="comment"># install the binary</span><br><span class="prompt">$</span> brew install omachy</span><button class="copy-btn" data-cmd="brew install omachy">copy</button></code>
-        <code><span class="cmd-text"><span class="comment"># run the installer</span><br><span class="prompt">$</span> omachy install</span><button class="copy-btn" data-cmd="omachy install">copy</button></code>
-      </div>
-    </section>
-
-    <section>
       <h2>features</h2>
       <div class="features">
         <div class="feature">
@@ -366,6 +376,15 @@
           <h3>Single Binary</h3>
           <p>All configs are embedded — no external files, no network fetches during install.</p>
         </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>install</h2>
+      <div class="install-steps">
+        <code><span class="cmd-text"><span class="comment"># add the tap</span><br><span class="prompt">$</span> brew tap dough654/omachy</span><button class="copy-btn" data-cmd="brew tap dough654/omachy">copy</button></code>
+        <code><span class="cmd-text"><span class="comment"># install the binary</span><br><span class="prompt">$</span> brew install omachy</span><button class="copy-btn" data-cmd="brew install omachy">copy</button></code>
+        <code><span class="cmd-text"><span class="comment"># run the installer</span><br><span class="prompt">$</span> omachy install</span><button class="copy-btn" data-cmd="omachy install">copy</button></code>
       </div>
     </section>
 
