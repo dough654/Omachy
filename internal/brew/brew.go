@@ -41,7 +41,10 @@ func Install(name string, cask bool, onLine func(string)) error {
 
 	args := []string{"install"}
 	if cask {
-		args = append(args, "--cask")
+		// --adopt tells Homebrew to claim an existing .app that was installed
+		// outside of Homebrew (e.g. via DMG) instead of failing with
+		// "It seems there is already an App at ...".
+		args = append(args, "--cask", "--adopt")
 	}
 	args = append(args, name)
 

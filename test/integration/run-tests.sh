@@ -223,6 +223,40 @@ assert_not_contains "zshrc managed block removed" "Omachy managed" "$zshrc_after
 dock_autohide_after=$(ssh_cmd "defaults read com.apple.dock autohide 2>/dev/null || echo unset")
 assert_not_contains "Dock autohide restored" "1" "$dock_autohide_after"
 
+# ── Pre-existing cask app (Issue #8) ─────────────────────────────────────────
+# Verify that install succeeds via --adopt when a cask app (Ghostty) already
+# exists in /Applications but was not installed via Homebrew.
+
+echo ""
+echo "── Pre-existing cask app (Issue #8) ──"
+
+# Install Ghostty via brew first, then remove the Caskroom entry so Homebrew
+# "forgets" about it while leaving the .app in /Applications. This simulates
+# a user who installed Ghostty outside Homebrew (e.g. via DMG).
+ssh_cmd "eval \"\$(/opt/homebrew/bin/brew shellenv)\" && brew install --cask ghostty" >/dev/null 2>&1
+ssh_cmd "sudo rm -rf /opt/homebrew/Caskroom/ghostty"
+
+# Verify: .app exists but Homebrew doesn't know about it
+ghostty_app=$(ssh_cmd "test -d /Applications/Ghostty.app && echo exists || echo missing")
+assert_eq "Ghostty.app exists in /Applications" "exists" "$ghostty_app"
+
+ghostty_brew=$(ssh_cmd "eval \"\$(/opt/homebrew/bin/brew shellenv)\" && brew list --cask ghostty >/dev/null 2>&1 && echo known || echo unknown")
+assert_eq "Ghostty not known to Homebrew" "unknown" "$ghostty_brew"
+
+echo "==> Running omachy install with pre-existing Ghostty.app..."
+ssh_cmd "eval \"\$(/opt/homebrew/bin/brew shellenv)\" && /tmp/omachy install --force --skip-backup --quiet" 2>&1 | tee /tmp/omachy-issue8.log || true
+
+# Install must not abort — state.json should exist
+state8_exists=$(ssh_cmd "test -f ~/.omachy/state.json && echo yes || echo no")
+assert_eq "install succeeds despite pre-existing Ghostty.app" "yes" "$state8_exists"
+
+# Homebrew should now know about Ghostty (adopted)
+ghostty_adopted=$(ssh_cmd "eval \"\$(/opt/homebrew/bin/brew shellenv)\" && brew list --cask ghostty >/dev/null 2>&1 && echo known || echo unknown")
+assert_eq "Ghostty adopted by Homebrew after install" "known" "$ghostty_adopted"
+
+# Clean up
+ssh_cmd "eval \"\$(/opt/homebrew/bin/brew shellenv)\" && /tmp/omachy uninstall --quiet" 2>&1 >/dev/null || true
+
 # ── Summary ──────────────────────────────────────────────────────────────────
 
 echo ""
