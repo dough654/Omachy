@@ -125,7 +125,7 @@ exec-on-workspace-change = ['/bin/bash', '-c',
 
     # Window management
     alt-q     = 'close'
-    alt-enter = 'exec-and-forget open -n /Applications/Ghostty.app'
+    alt-enter = 'exec-and-forget osascript -e "tell application \"Ghostty\" to new window"'
 
     # Mode switching
     alt-shift-semicolon = 'mode service'
