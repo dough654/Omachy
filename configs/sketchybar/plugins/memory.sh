@@ -4,14 +4,21 @@
 TOTAL=$(sysctl -n hw.memsize)
 TOTAL_GB=$(( TOTAL / 1073741824 ))
 
-# vm_stat reports pages; page size is 4096 bytes on Apple Silicon
-PAGE_SIZE=4096
+# vm_stat reports pages; parse the page size from its header line.
 VM=$(vm_stat)
-WIRED=$(echo "$VM"   | awk '/wired down/   {gsub(/\./,""); print $4}')
-ACTIVE=$(echo "$VM"  | awk '/Pages active/  {gsub(/\./,""); print $3}')
+PAGE_SIZE=$(echo "$VM" | awk -F'[() ]+' '/page size of/ {print $8; exit}')
+if [ -z "$PAGE_SIZE" ]; then
+    PAGE_SIZE=4096
+fi
+WIRED=$(echo "$VM"   | awk '/wired down/ {gsub(/\./,""); print $4}')
+ANON=$(echo "$VM"    | awk '/Anonymous pages/ {gsub(/\./,""); print $3}')
 COMPRESSED=$(echo "$VM" | awk '/occupied by compressor/ {gsub(/\./,""); print $5}')
 
-USED_BYTES=$(( (WIRED + ACTIVE + COMPRESSED) * PAGE_SIZE ))
+if [ -z "$ANON" ]; then
+    ANON=$(echo "$VM" | awk '/Pages active/ {gsub(/\./,""); print $3}')
+fi
+
+USED_BYTES=$(( (WIRED + ANON + COMPRESSED) * PAGE_SIZE ))
 USED_GB=$(( USED_BYTES / 1073741824 ))
 PCT=$(( USED_BYTES * 100 / TOTAL ))
 
