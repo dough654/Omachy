@@ -238,6 +238,10 @@ go test ./... -v
 
 Tests cover the pure logic and I/O packages: manifest data, checksum computation, backup file operations, state serialization, TUI components (phases, header, help, splash, app state machine), and preflight logic. Shell-heavy wrappers (brew, system commands) are not unit tested — they're thin wrappers best verified by running the tool.
 
+### CI coverage
+
+- `ci.yml` runs on pull requests and pushes to `master`: `gofmt` check, `go vet ./...`, and `go test ./...`.
+
 ## License
 
 Open source. See [LICENSE](LICENSE) for details.
