@@ -22,6 +22,7 @@ Omachy brings the [Omarchy](https://omakub.org/) experience to macOS — a tilin
 | [Starship](https://starship.rs/) | Formula | Cross-shell prompt |
 | [fzf](https://github.com/junegunn/fzf) | Formula | Fuzzy finder |
 | [Lazygit](https://github.com/jesseduffield/lazygit) | Formula | Git TUI |
+| [opencode](https://github.com/sst/opencode) | Formula | AI coding agent CLI |
 | [Lazydocker](https://github.com/jesseduffield/lazydocker) | Formula | Docker TUI |
 | [Atuin](https://atuin.sh/) | Formula | Shell history search & sync |
 | [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) | Formula | Fish-like syntax highlighting for Zsh |
