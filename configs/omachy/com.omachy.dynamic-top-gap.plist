@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.omachy.dynamic-top-gap</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>-lc</string>
+        <string>$HOME/.config/omachy/dynamic-top-gap.sh</string>
+    </array>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>StartInterval</key>
+    <integer>3</integer>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/omachy-dynamic-top-gap.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/tmp/omachy-dynamic-top-gap.log</string>
+</dict>
+</plist>

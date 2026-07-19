@@ -48,6 +48,8 @@ Omachy brings the [Omarchy](https://omakub.org/) experience to macOS — a tilin
 | `tmux/tmux.conf` | `~/.tmux.conf` *(NeverOverwrite)* |
 | `starship.toml` | `~/.config/starship.toml` |
 | `omachy/dev-session.sh` | `~/.config/omachy/dev-session.sh` |
+| `omachy/dynamic-top-gap.sh` | `~/.config/omachy/dynamic-top-gap.sh` |
+| `omachy/com.omachy.dynamic-top-gap.plist` | `~/Library/LaunchAgents/com.omachy.dynamic-top-gap.plist` |
 
 **These files are never overwritten:**
 

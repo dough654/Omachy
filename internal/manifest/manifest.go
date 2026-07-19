@@ -80,5 +80,7 @@ func Configs() []ConfigMapping {
 		{Source: "tmux/tmux.conf", Dest: "~/.tmux.conf", Mode: 0644, NeverOverwrite: true},
 		{Source: "starship.toml", Dest: "~/.config/starship.toml", Mode: 0644},
 		{Source: "omachy/dev-session.sh", Dest: "~/.config/omachy/dev-session.sh", Mode: 0755},
+		{Source: "omachy/dynamic-top-gap.sh", Dest: "~/.config/omachy/dynamic-top-gap.sh", Mode: 0755},
+		{Source: "omachy/com.omachy.dynamic-top-gap.plist", Dest: "~/Library/LaunchAgents/com.omachy.dynamic-top-gap.plist", Mode: 0644},
 	}
 }

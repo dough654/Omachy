@@ -4,6 +4,7 @@ config-version = 2
 after-startup-command = [
     'exec-and-forget sketchybar',
     'exec-and-forget borders active_color="glow(0xff00ffaa)" inactive_color=0xff313244 width=6.0',
+    'exec-and-forget /bin/bash ~/.config/omachy/dynamic-top-gap.sh',
 ]
 
 start-at-login = true
@@ -19,7 +20,7 @@ enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 
 # ── Mouse follows focus ───────────────────────────────────────────────────────
-on-focused-monitor-changed = []
+on-focused-monitor-changed = ['exec-and-forget /bin/bash ~/.config/omachy/dynamic-top-gap.sh']
 on-focus-changed = []
 
 # ── Sketchybar integration ────────────────────────────────────────────────────

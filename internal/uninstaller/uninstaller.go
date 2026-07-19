@@ -112,6 +112,10 @@ func stopServices(p *tea.Program, opts Options) error {
 		}
 	}
 
+	if err := unloadDynamicTopGapAgent(log, opts.DryRun); err != nil {
+		log(fmt.Sprintf("    Warning: failed to unload dynamic top gap agent: %v", err))
+	}
+
 	return nil
 }
 
@@ -340,4 +344,36 @@ func shortPath(path string) string {
 		return "~" + path[len(home):]
 	}
 	return path
+}
+
+func unloadDynamicTopGapAgent(log func(string), dryRun bool) error {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return err
+	}
+	plistPath := filepath.Join(home, "Library", "LaunchAgents", "com.omachy.dynamic-top-gap.plist")
+	if _, err := os.Stat(plistPath); err != nil {
+		if os.IsNotExist(err) {
+			return nil
+		}
+		return err
+	}
+
+	uid := fmt.Sprintf("%d", os.Getuid())
+	service := "gui/" + uid + "/com.omachy.dynamic-top-gap"
+	if dryRun {
+		log("==> Would unload dynamic top gap monitor agent")
+		return nil
+	}
+
+	log("==> Unloading dynamic top gap monitor agent")
+	if _, err := shell.Run("launchctl", "disable", service); err != nil {
+		// best effort
+	}
+	if _, err := shell.Run("launchctl", "bootout", "gui/"+uid, plistPath); err != nil {
+		if !strings.Contains(err.Error(), "No such process") {
+			return err
+		}
+	}
+	return nil
 }

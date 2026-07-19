@@ -2,6 +2,8 @@ package installer
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -82,6 +84,10 @@ func runSystem(p *tea.Program, opts Options) error {
 		shell.Run("killall", "Dock")
 		log("==> Restarting SystemUIServer (menu bar)")
 		shell.Run("killall", "SystemUIServer")
+
+		if err := loadDynamicTopGapAgent(log); err != nil {
+			log(fmt.Sprintf("    Warning: failed to load dynamic top gap agent: %v", err))
+		}
 	}
 
 	p.Send(tui.ProgressUpdate{Percent: 90})
@@ -191,4 +197,34 @@ func appendUnique(slice []string, item string) []string {
 		}
 	}
 	return append(slice, item)
+}
+
+func loadDynamicTopGapAgent(log func(string)) error {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return err
+	}
+	plistPath := filepath.Join(home, "Library", "LaunchAgents", "com.omachy.dynamic-top-gap.plist")
+	if _, err := os.Stat(plistPath); err != nil {
+		if os.IsNotExist(err) {
+			log("    Dynamic top gap agent plist not found, skipping")
+			return nil
+		}
+		return err
+	}
+
+	log("==> Loading dynamic top gap monitor agent")
+	if _, err := shell.Run("launchctl", "bootout", "gui/"+fmt.Sprintf("%d", os.Getuid()), plistPath); err != nil {
+		// best effort: ignore if not loaded yet
+	}
+	if _, err := shell.Run("launchctl", "bootstrap", "gui/"+fmt.Sprintf("%d", os.Getuid()), plistPath); err != nil {
+		return err
+	}
+	if _, err := shell.Run("launchctl", "enable", "gui/"+fmt.Sprintf("%d", os.Getuid())+"/com.omachy.dynamic-top-gap"); err != nil {
+		return err
+	}
+	if _, err := shell.Run("launchctl", "kickstart", "-k", "gui/"+fmt.Sprintf("%d", os.Getuid())+"/com.omachy.dynamic-top-gap"); err != nil {
+		return err
+	}
+	return nil
 }
