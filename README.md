@@ -6,7 +6,7 @@ https://github.com/user-attachments/assets/ba95b0f2-8d99-4987-b2f5-fa932f45a259
 
 Omachy brings the [Omarchy](https://omakub.org/) experience to macOS — a tiling WM, custom menu bar, terminal emulator, editor, and sane system defaults, all configured in one shot. For people who'd rather be on Linux but can't.
 
-**[Homepage](https://omachy.org)** · **[Usage Guide](https://omachy.org/guide.html)**
+**[Homepage](https://omachy.org)** · **[Usage Guide](https://omachy.org/guide.html)** · **[🍺 Buy me a beer](https://ko-fi.com/dough654)**
 
 ## What Gets Installed
 
@@ -244,6 +244,12 @@ Tests cover the pure logic and I/O packages: manifest data, checksum computation
 ### CI coverage
 
 - `ci.yml` runs on pull requests and pushes to `master`: `gofmt` check, `go vet ./...`, and `go test ./...`.
+
+## Support
+
+If Omachy saved you some setup time, you can buy me a beer — no pressure, always appreciated.
+
+[![Buy me a beer](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/dough654)
 
 ## License
 
