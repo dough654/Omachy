@@ -4,7 +4,9 @@ PERCENTAGE=$(pmset -g batt | grep -Eo '[0-9]+%' | tr -d '%')
 CHARGING=$(pmset -g batt | grep 'AC Power')
 
 if [ -z "$PERCENTAGE" ]; then
-    sketchybar --set "$NAME" icon="󱉝" label="?"
+    # No battery (Mac mini, Mac Studio, Mac Pro) — hide the item instead of
+    # showing a permanent "?".
+    sketchybar --set "$NAME" drawing=off
     exit 0
 fi
 
@@ -23,4 +25,4 @@ else
     ICON="󰁺" COLOR=0xfff38ba8   # critical
 fi
 
-sketchybar --set "$NAME" icon="$ICON" icon.color="$COLOR" label="${PERCENTAGE}%"
+sketchybar --set "$NAME" drawing=on icon="$ICON" icon.color="$COLOR" label="${PERCENTAGE}%"
